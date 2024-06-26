@@ -48,8 +48,7 @@ Seller (-F)
 Buyer  (+F)
 
 risk-free rate (r) 
-
-slippage premium (s)
+ 
 
 
 

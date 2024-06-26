@@ -13,16 +13,28 @@ txn:
     - seller: 
     - vault: -BTC 
 
+position: 
+- -F = short; +F = long  
+
 There are two core components:   
 - cBTC (forward buyer receipt): cBTC will become BTC at its maturity date. cBTC should be traded slightly higher than BTC. 
 - vault (btc): one btc is deposited into the vault per forward txn  
 
 capital-efficient variant: 
 - cBTC (forward buyer receipt): cBTC will become BTC at its maturity date. cBTC should be traded slightly higher than BTC.  
-- vault (margin acccount): can hold any assets that's worth more than the obligation. If margin account if below the obligation + cushion, liquidate and buy BTC 
+- vault (margin acccount): can hold any assets that's worth more than the obligation. If margin account is below the obligation + cushion, liquidate and buy BTC 
 
 fund-rate version: 
-
+- perp = mark; spot = index  
+- daily funding rate (longs pay to short) = ( mark - index ) * 1/365 
+- paid by hourly, or even less time 
+- long / short perp are positions  
+- fully funded -> 0 margin  
+- liquidation = sell and transfer before long / short become insolvant  
+- long perp = buy forward contract 
+- short perp = synthetic short  
+- what if long / short don't match perfectly? 
+ 
 Maturity: 
 - At maturity, cBTC is burned. BTC is transferred from vault to cBTC holder. 
 

@@ -3,52 +3,41 @@ simple implementation of on-chain btc forward contract
 
 txn: 
 - T0 
-    - buyer: - spot BTC - rt | cBTC 
-    - seller: - BTC | fBTC 
-    - vault: + BTC | BTC 
-- Redemption 
-    - cBTC = BTC + rt   
-    - fBTC = BTC - rt 
+    - buyer: -spotBTC -rt | cBTC 
+    - seller: -BTC +rt +spotBTC 
+    - vault: +BTC | BTC 
+- Redemption? 
+    - cBTC = +BTC; 
 - T1 
-    - buyer: 
+    - buyer: +BTC -cBTC 
     - seller: 
-    - vault: 
+    - vault: -BTC 
 
-There are three core components:   
-- fBTC (forward seller receipt): (fBTC + rt ) can be used to redeem BTC before its maturity date. fBTC should be traded slightly lower than BTC.  
+There are two core components:   
 - cBTC (forward buyer receipt): cBTC will become BTC at its maturity date. cBTC should be traded slightly higher than BTC. 
-- vault (btc): one btc is deposited into the vault per forward txn 
+- vault (btc): one btc is deposited into the vault per forward txn  
 
+capital-efficient variant: 
+- cBTC (forward buyer receipt): cBTC will become BTC at its maturity date. cBTC should be traded slightly higher than BTC.  
+- vault (margin acccount): can hold any assets that's worth more than the obligation. If margin account if below the obligation + cushion, liquidate and buy BTC 
+
+fund-rate version: 
 
 Maturity: 
-- At maturity, fBTC and cBTC are burned. BTC is transferred from vault to cBTC holder. 
-
-Redeem: 
-- Before maturity, fBTC holders can use (fBTC + rt ) to redeem BTC from the vault.  
-- if BTC drop from 10k to 1k,  
-- if BTC appreciate from 10k to 100k 
-
+- At maturity, cBTC is burned. BTC is transferred from vault to cBTC holder. 
 
 - if holders think BTC will go down and thus want to sell BTC now  
-        - fBTC holder: 1/ sell fBTC for slightly less than BTC spot; 2/ (fBTC + rt + s) redeem btc and sell BTC
-        - cBTC holder: 1/ sell cBTC for slightly more than BTC spot; 2/ burn cBTC to redeem (BTC + rt) and sell BTC 
+        - cBTC holder: 1/ sell cBTC for slightly more than BTC spot; 2/ burn cBTC to redeem BTC and sell BTC 
 - if holders think BTC will go up and thus want to buy BTC now 
-        - fBTC holder: 1/ (fBTC + rt + s) redeem BTC and hold 
-        - cBTC holder: keep holding. 
+        - cBTC holder: keep holding cBTC till maturity.   
         
 Market: 
-- r and s are determined by the market, impacted by risk-free rate, related slippage, and BTC price  
-- index  
-- mark
+- r and s are determined by the market, impacted by risk-free rate, related slippage, and BTC price   
 
-BTC 
+margin and liquidatin: 
+- stake money 
 
-Seller (-F) 
-
-Buyer  (+F)
-
-risk-free rate (r) 
- 
-
-
-
+Downside: 
+- less capital efficient because money has to be locked in the vault before the forward contract reaches maturity. 
+- in tradfi, seller of forward contract can sell and buy the assets before maturity, creating a short position. 
+- trafi needs KYC and some credit to the seller; broker wouldn't not margin call the user as long as the user has sufficient assets in the account for paying back 
